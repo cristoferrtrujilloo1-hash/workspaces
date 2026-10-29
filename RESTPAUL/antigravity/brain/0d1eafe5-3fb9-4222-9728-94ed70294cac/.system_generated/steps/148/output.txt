@@ -1,0 +1,5 @@
+Command exited with code 0.
+
+Command output:
+Found kpi-banner-section in index.html: 1
+Found kpi-banner-section in app.js: 2

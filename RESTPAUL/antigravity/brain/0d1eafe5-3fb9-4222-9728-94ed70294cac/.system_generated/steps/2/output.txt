@@ -1,0 +1,21 @@
+Command exited with code 1.
+
+Command output:
+node : El t�rmino 'node' no se reconoce como nombre de un cmdlet, funci�n, archivo de script o programa ejecutable. 
+Compruebe si escribi� correctamente el nombre o, si incluy� una ruta de acceso, compruebe que dicha ruta es correcta e 
+int�ntelo de nuevo.
+En l�nea: 1 Car�cter: 87
++ ... TMP = $env:_TMP; $env:LOCALAPPDATA = $env:_LOCALAPPDATA; node -v; pyt ...
++                                                              ~~~~
+    + CategoryInfo          : ObjectNotFound: (node:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+Error al ejecutar el programa 'python.exe': El sistema no tiene acceso al archivoEn l�nea: 1 Car�cter: 96
++ ... MP; $env:LOCALAPPDATA = $env:_LOCALAPPDATA; node -v; python --version
++                                                          ~~~~~~~~~~~~~~~~.
+En l�nea: 1 Car�cter: 96
++ ... MP; $env:LOCALAPPDATA = $env:_LOCALAPPDATA; node -v; python --version
++                                                          ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException
+    + FullyQualifiedErrorId : NativeCommandFailed
+ 

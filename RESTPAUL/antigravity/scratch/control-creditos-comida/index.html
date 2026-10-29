@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GourmetLedger &bull; Control Profesional de Créditos y Cobranza</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-slate-900 selection:text-white">
+
+  <!-- ================= BARRA SUPERIOR EJECUTIVA ================= -->
+  <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Fila Superior: Marca, Negocio y Acciones Principales -->
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-4">
+        
+        <!-- Identidad de Marca y Restaurante -->
+        <div class="flex items-center space-x-3.5">
+          <div class="w-11 h-11 bg-slate-950 text-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-800 relative">
+            <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10"/><path d="M15 22v-8"/><path d="M6 2v20"/><path d="M3 2v6a3 3 0 0 0 6 0V2"/>
+            </svg>
+            <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 id="header-business-name" class="font-bold text-sm sm:text-base text-slate-900 tracking-tight leading-tight">
+                Control de Créditos
+              </h1>
+              <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-semibold uppercase tracking-wider">POS Food</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium">Gestión Contable de Fiados, Cuentas y Cobranza</p>
+          </div>
+        </div>
+
+        <!-- Botones de Acción Inmediata -->
+        <div class="flex items-center space-x-2">
+          <button onclick="switchTab('consumos')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 rounded-xl text-xs font-semibold transition-all">
+            <svg class="w-3.5 h-3.5 text-amber-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10"/><path d="M15 22v-8"/><path d="M6 2v20"/></svg>
+            <span>Anotar Fiado</span>
+          </button>
+
+          <button onclick="switchTab('abonos')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200/80 rounded-xl text-xs font-semibold transition-all">
+            <svg class="w-3.5 h-3.5 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+            <span>Registrar Abono</span>
+          </button>
+
+          <button onclick="openModal('modal-add-client')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-xs transition-all">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Comensal</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Barra de Navegación de Pestañas (Segmented Controls) -->
+      <nav class="flex space-x-1 border-t border-slate-100 py-2.5 overflow-x-auto text-xs font-semibold">
+        <button id="nav-btn-clientes" onclick="switchTab('clientes')" class="nav-tab-btn px-3.5 py-2 rounded-xl bg-slate-900 text-white flex items-center gap-2 whitespace-nowrap shadow-xs">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Comensales y Cuentas</span>
+          <span id="nav-badge-debtors" class="ml-1 px-1.5 py-0.2 bg-rose-500 text-white rounded-full text-[10px] font-bold">0</span>
+        </button>
+
+        <button id="nav-btn-consumos" onclick="switchTab('consumos')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-2 whitespace-nowrap transition-colors font-medium">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10"/><path d="M15 22v-8"/><path d="M6 2v20"/></svg>
+          <span>Anotar Fiado (Consumo)</span>
+        </button>
+
+        <button id="nav-btn-abonos" onclick="switchTab('abonos')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-2 whitespace-nowrap transition-colors font-medium">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+          <span>Registrar Abono / Pago</span>
+        </button>
+
+        <button id="nav-btn-reportes" onclick="switchTab('reportes')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-2 whitespace-nowrap transition-colors font-medium">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-8"/><path d="M16 12h-8"/><path d="M12 16h-4"/></svg>
+          <span>Reporte de Cobranza</span>
+        </button>
+
+        <button id="nav-btn-configuracion" onclick="switchTab('configuracion')" class="nav-tab-btn px-3.5 py-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-2 whitespace-nowrap transition-colors font-medium">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Ajustes & Respaldo</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= DASHBOARD & CONTENIDO PRINCIPAL ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full no-print">
+
+    <!-- ================= PESTAÑA 1: COMENSALES Y CUENTAS ================= -->
+    <section id="tab-content-clientes" class="tab-content">
+      <!-- Toolbar de Búsqueda, Filtro y Switch de Vista -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs mb-6 flex flex-col sm:flex-row gap-3.5 items-center justify-between">
+        
+        <!-- Input de Búsqueda -->
+        <div class="relative w-full sm:w-96">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <input 
+            type="text" 
+            id="search-clients-input" 
+            placeholder="Buscar por nombre, oficina o teléfono..." 
+            class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white transition-all"
+          >
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          
+          <!-- Filtro de estado -->
+          <div class="flex items-center gap-2">
+            <select id="filter-clients-status" class="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 shadow-xs cursor-pointer">
+              <option value="debtors" selected>Pendientes de Cobro</option>
+              <option value="all">Todos los Comensales</option>
+              <option value="cleared">Cuentas al Día</option>
+            </select>
+          </div>
+
+          <!-- Switcher de Vista: Cuadrícula / Tabla -->
+          <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/60 text-xs">
+            <button id="view-toggle-grid" onclick="setClientViewMode('grid')" class="p-1.5 rounded-lg bg-white shadow-xs text-slate-800 border border-slate-200 transition-all" title="Vista Cuadrícula">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+            </button>
+            <button id="view-toggle-table" onclick="setClientViewMode('table')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-all" title="Vista Tabla Ejecutiva">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Contenedor Principal de Clientes (Grid o Tabla dinámico) -->
+      <div id="clients-view-container" class="animate-slide-up">
+        <!-- Render dinámico desde JavaScript -->
+      </div>
+    </section>
+
+    <!-- ================= PESTAÑA 2: ANOTAR FIADO (CONSUMO) ================= -->
+    <section id="tab-content-consumos" class="tab-content hidden animate-slide-up">
+      <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-9 border border-slate-200 shadow-xs">
+        
+        <div class="mb-6 pb-4 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 border border-amber-200/60 flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10"/><path d="M15 22v-8"/><path d="M6 2v20"/></svg>
+              </span>
+              <span>Anotar Consumo Fiado</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Asigna el platillo o menú servido para acumularlo en el saldo del cliente.</p>
+          </div>
+        </div>
+
+        <form id="credit-form" class="space-y-4">
+          <!-- Selección de Cliente -->
+          <div>
+            <label for="credit-client-id" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Comensal / Cliente *
+            </label>
+            <select id="credit-client-id" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white">
+              <!-- Opciones dinámicas -->
+            </select>
+            <div id="credit-client-preview" class="mt-2.5 hidden"></div>
+          </div>
+
+          <!-- Atajos rápidos de platillos comunes -->
+          <div>
+            <span class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Atajos de platillos frecuentes:</span>
+            <div class="flex flex-wrap gap-2 text-xs">
+              <button type="button" onclick="setQuickDish('1x Menú Ejecutivo del día', 30.00)" class="px-3 py-1.5 bg-amber-50/80 hover:bg-amber-100 text-amber-900 rounded-xl border border-amber-200 font-semibold transition-all">
+                🍱 Menú Ejecutivo (Q. 30)
+              </button>
+              <button type="button" onclick="setQuickDish('2x Menú Ejecutivo del día', 60.00)" class="px-3 py-1.5 bg-amber-50/80 hover:bg-amber-100 text-amber-900 rounded-xl border border-amber-200 font-semibold transition-all">
+                🍱 2x Menú Ejecutivo (Q. 60)
+              </button>
+              <button type="button" onclick="setQuickDish('1x Desayuno Completo + Café', 25.00)" class="px-3 py-1.5 bg-amber-50/80 hover:bg-amber-100 text-amber-900 rounded-xl border border-amber-200 font-semibold transition-all">
+                ☕ Desayuno + Café (Q. 25)
+              </button>
+              <button type="button" onclick="setQuickDish('Comida corrida con agua fresca', 25.00)" class="px-3 py-1.5 bg-amber-50/80 hover:bg-amber-100 text-amber-900 rounded-xl border border-amber-200 font-semibold transition-all">
+                🍲 Comida Corrida (Q. 25)
+              </button>
+              <button type="button" onclick="setQuickDish('1x Refresco / Bebida', 8.00)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition-all">
+                🥤 Bebida (Q. 8)
+              </button>
+            </div>
+          </div>
+
+          <!-- Detalle de lo consumido -->
+          <div>
+            <label for="credit-description" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Detalle del Consumo (Platillos / Bebidas) *
+            </label>
+            <input 
+              type="text" 
+              id="credit-description" 
+              required 
+              placeholder="Ej: 2 Menús ejecutivos con pechuga + 1 gaseosa" 
+              class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none"
+            >
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Monto -->
+            <div>
+              <label for="credit-amount" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Monto Total (Quetzales) *
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400 font-mono text-xs">Q.</span>
+                <input 
+                  type="number" 
+                  id="credit-amount" 
+                  step="0.01" 
+                  min="0.1" 
+                  required 
+                  placeholder="0.00" 
+                  class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 font-mono-numbers focus:ring-2 focus:ring-slate-900 focus:outline-none"
+                >
+              </div>
+            </div>
+
+            <!-- Categoría -->
+            <div>
+              <label for="credit-category" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Tiempo de Comida
+              </label>
+              <select id="credit-category" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white">
+                <option value="Almuerzo">Almuerzo / Menú del día</option>
+                <option value="Desayuno">Desayuno</option>
+                <option value="Cena">Cena</option>
+                <option value="Bebidas">Solo Bebidas</option>
+                <option value="Antojitos">Antojitos / Extras</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="credit-date" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Fecha
+              </label>
+              <input type="date" id="credit-date" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+            </div>
+            <div>
+              <label for="credit-time" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Hora
+              </label>
+              <input type="time" id="credit-time" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Guardar Consumo en Cuenta del Comensal</span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ================= PESTAÑA 3: REGISTRAR ABONO / PAGO ================= -->
+    <section id="tab-content-abonos" class="tab-content hidden animate-slide-up">
+      <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-9 border border-slate-200 shadow-xs">
+        
+        <div class="mb-6 pb-4 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+              </span>
+              <span>Registrar Abono o Liquidación</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Asienta el dinero recibido para descontarlo del saldo deudor del cliente.</p>
+          </div>
+        </div>
+
+        <form id="payment-form" class="space-y-4">
+          <!-- Selección de Cliente -->
+          <div>
+            <label for="payment-client-id" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Comensal que realiza el pago *
+            </label>
+            <select id="payment-client-id" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white">
+              <!-- Opciones dinámicas -->
+            </select>
+            <div id="payment-client-preview" class="mt-2.5 hidden"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Monto abonado -->
+            <div>
+              <label for="payment-amount" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Monto Recibido (Quetzales) *
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400 font-mono text-xs">Q.</span>
+                <input 
+                  type="number" 
+                  id="payment-amount" 
+                  step="0.01" 
+                  min="0.1" 
+                  required 
+                  placeholder="0.00" 
+                  class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 font-mono-numbers focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                >
+              </div>
+            </div>
+
+            <!-- Método de Pago -->
+            <div>
+              <label for="payment-method" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Método de Pago
+              </label>
+              <select id="payment-method" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white">
+                <option value="Efectivo">Efectivo en Caja</option>
+                <option value="Transferencia Banco Industrial (BI)">Transferencia Banco Industrial (BI)</option>
+                <option value="Transferencia Banrural">Transferencia Banrural</option>
+                <option value="Transferencia Móvil / Transfer">Transferencia Móvil</option>
+                <option value="Tarjeta Débito/Crédito">Tarjeta Débito/Crédito</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Nota o Referencia -->
+          <div>
+            <label for="payment-notes" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Referencia / Comprobante (Opcional)
+            </label>
+            <input 
+              type="text" 
+              id="payment-notes" 
+              placeholder="Ej: Transferencia BI ref #98412 o Pagó en barra" 
+              class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            >
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="payment-date" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Fecha de Pago
+              </label>
+              <input type="date" id="payment-date" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+            </div>
+            <div>
+              <label for="payment-time" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Hora
+              </label>
+              <input type="time" id="payment-time" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Asentar Abono y Actualizar Saldo</span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ================= PESTAÑA 4: REPORTE DE COBRANZA ================= -->
+    <section id="tab-content-reportes" class="tab-content hidden animate-slide-up">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 mb-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-100">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-8"/><path d="M16 12h-8"/><path d="M12 16h-4"/></svg>
+              </span>
+              <span>Reporte General de Cobranza</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Listado consolidado de saldos pendientes para cobro con botón de contacto directo.
+            </p>
+          </div>
+
+          <!-- Botones de Acción de Reporte -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="exportDebtorsToXLS()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-xs">
+              <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Descargar Excel (.XLS)</span>
+            </button>
+            <button onclick="printGeneralReport()" class="px-3.5 py-2 bg-slate-900 text-white hover:bg-slate-800 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 transition-colors shadow-xs">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+              <span>Imprimir Reporte</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI CARDS EJECUTIVOS - Exclusivo en Reporte de Cobranza -->
+        <div id="kpi-banner-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+          
+          <!-- Card 1: Total Deuda Pendiente -->
+          <div class="bg-rose-50/70 rounded-2xl border border-rose-200 p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold text-rose-700 uppercase tracking-wider">Total por Cobrar</span>
+              <div class="w-7 h-7 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs">
+                Q.
+              </div>
+            </div>
+            <div id="stat-total-debt" class="text-xl font-black text-rose-600 font-mono-numbers tracking-tight">Q. 0.00</div>
+            <div class="mt-1.5 text-[11px] text-rose-700 flex items-center gap-1.5 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              <span id="report-debtors-count">0 personas</span>
+            </div>
+            <!-- ID espejo para retrocompatibilidad -->
+            <span id="report-total-sum" class="hidden"></span>
+          </div>
+
+          <!-- Card 2: Total Recaudado -->
+          <div class="bg-emerald-50/70 rounded-2xl border border-emerald-200 p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Total Recaudado</span>
+              <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+              </div>
+            </div>
+            <div id="stat-total-paid" class="text-xl font-black text-emerald-700 font-mono-numbers tracking-tight">Q. 0.00</div>
+            <div class="mt-1.5 text-[11px] text-emerald-700 flex items-center gap-1.5 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Abonos y pagos</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Promedio de Deuda por Comensal -->
+          <div class="bg-indigo-50/70 rounded-2xl border border-indigo-200 p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold text-indigo-800 uppercase tracking-wider">Ticket Promedio</span>
+              <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              </div>
+            </div>
+            <div id="stat-avg-debt" class="text-xl font-black text-slate-900 font-mono-numbers tracking-tight">Q. 0.00</div>
+            <div class="mt-1.5 text-[11px] text-indigo-700 font-medium">Por comensal deudor</div>
+          </div>
+
+          <!-- Card 4: Seguridad y Estado de Cartera -->
+          <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Deudores Activos</span>
+              <div class="w-7 h-7 rounded-lg bg-slate-200/80 text-slate-600 flex items-center justify-center">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </div>
+            </div>
+            <div id="stat-debtors-count" class="text-xl font-black text-slate-800 tracking-tight">0 personas</div>
+            <div class="mt-1.5 text-[11px] text-slate-500 flex items-center gap-1.5 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Cartera monitoreada</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tabla de Deudores -->
+        <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase border-b border-slate-200 tracking-wider">
+                <th class="px-4 py-3.5 text-center w-12">#</th>
+                <th class="px-4 py-3.5">Comensal / Ubicación</th>
+                <th class="px-4 py-3.5">Contacto</th>
+                <th class="px-4 py-3.5">Último Consumo</th>
+                <th class="px-4 py-3.5">Saldo Deudor</th>
+                <th class="px-4 py-3.5 text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="report-debtors-tbody" class="divide-y divide-slate-100">
+              <!-- Render dinámico desde JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= PESTAÑA 5: CONFIGURACIÓN Y RESPALDO ================= -->
+    <section id="tab-content-configuracion" class="tab-content hidden animate-slide-up">
+      <div class="max-w-3xl mx-auto space-y-6">
+
+        <!-- Formulario del Negocio -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+          <div class="mb-6 pb-4 border-b border-slate-100">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </span>
+              <span>Datos del Restaurante / Negocio</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Esta información se imprimirá en los tickets y mensajes para cobrar a tus comensales.</p>
+          </div>
+
+          <form id="config-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="cfg-business-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Nombre del Negocio / Comedor
+                </label>
+                <input type="text" id="cfg-business-name" required class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+              </div>
+              <div>
+                <label for="cfg-owner-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Encargado / Administrador
+                </label>
+                <input type="text" id="cfg-owner-name" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="cfg-phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Teléfono / WhatsApp de Cobranza
+                </label>
+                <input type="text" id="cfg-phone" placeholder="Ej: 50212345678" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+              </div>
+              <div>
+                <label for="cfg-currency" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Símbolo de Moneda
+                </label>
+                <input type="text" id="cfg-currency" placeholder="Q., $, S/., €, etc." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+              </div>
+            </div>
+
+            <div>
+              <label for="cfg-payment-info" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Cuentas Bancarias para Transferencias (Aparecen en el Ticket)
+              </label>
+              <textarea id="cfg-payment-info" rows="2" placeholder="Ej: Banco Industrial (BI) Cta: 014-4812-990 | Banrural Cta: 3102-4589-12 | Transferencia Móvil" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
+            </div>
+
+            <div>
+              <label for="cfg-whatsapp-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Plantilla del Mensaje de WhatsApp
+              </label>
+              <textarea id="cfg-whatsapp-msg" rows="4" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-mono text-slate-700 focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
+              <p class="text-[11px] text-slate-400 mt-1">Variables automáticas: {CLIENTE}, {NEGOCIO}, {DETALLES}, {MONEDA}, {TOTAL}, {DATOS_PAGO}</p>
+            </div>
+
+            <div class="pt-2 text-right">
+              <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs shadow-xs transition-all">
+                Guardar Configuración
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Copias de Seguridad y Respaldo -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+          <div class="mb-4">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </span>
+              <span>Respaldo y Seguridad de Datos</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Tus datos se guardan de forma privada y local en tu navegador. Puedes exportarlos para guardarlos en tu computadora o pasarlos a otro dispositivo.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button onclick="exportFullBackupJSON()" class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl text-xs font-bold text-slate-800 flex flex-col items-center justify-center text-center gap-2 transition-all">
+              <svg class="w-5 h-5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Descargar Copia (JSON)</span>
+            </button>
+
+            <label class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl text-xs font-bold text-slate-800 flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all">
+              <svg class="w-5 h-5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Restaurar Copia</span>
+              <input type="file" id="input-import-backup" accept=".json" onchange="handleImportJSON(event)" class="hidden">
+            </label>
+
+            <button onclick="resetToDemoData()" class="p-4 bg-rose-50/70 hover:bg-rose-100/80 border border-rose-200 rounded-2xl text-xs font-bold text-rose-700 flex flex-col items-center justify-center text-center gap-2 transition-all">
+              <svg class="w-5 h-5 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <span>Restaurar Datos Ejemplo</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER DISCRETO ================= -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400 no-print">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+      <span>GourmetLedger POS &bull; Control de Créditos y Cobranza</span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Operando 100% Offline</span>
+    </div>
+  </footer>
+
+  <!-- ================= MODAL: NUEVO / EDITAR CLIENTE ================= -->
+  <div id="modal-add-client" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl border border-slate-200 animate-slide-up">
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
+        <h3 id="modal-client-title" class="font-bold text-slate-900 text-sm tracking-tight">Registrar Nuevo Comensal</h3>
+        <button onclick="closeModal('modal-add-client')" class="text-slate-400 hover:text-slate-700 text-xl font-bold leading-none">&times;</button>
+      </div>
+
+      <form id="client-form" class="space-y-3.5">
+        <input type="hidden" id="client-form-id">
+
+        <div>
+          <label for="client-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo *</label>
+          <input type="text" id="client-name" required placeholder="Ej: Ing. Carlos Mendoza" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="client-alias" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Apodo / Empresa / Oficina</label>
+          <input type="text" id="client-alias" placeholder="Ej: Oficina 304 - Edificio Central o Taller" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="client-phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono / WhatsApp de Cobro</label>
+          <input type="text" id="client-phone" placeholder="Ej: 50212345678" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="client-limit" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Límite de Crédito Opcional (Q.)</label>
+          <input type="number" id="client-limit" step="0.01" placeholder="Ej: 300.00 (0 para sin límite)" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-mono-numbers focus:ring-2 focus:ring-slate-900 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="client-notes" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Notas / Días de Pago</label>
+          <textarea id="client-notes" rows="2" placeholder="Ej: Paga cada quincena puntualmente" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-between pt-3.5 border-t border-slate-100">
+          <button type="button" id="btn-delete-client" onclick="deleteCurrentClient()" class="hidden px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors">
+            Eliminar
+          </button>
+          <div class="flex gap-2 ml-auto">
+            <button type="button" onclick="closeModal('modal-add-client')" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-50">
+              Cancelar
+            </button>
+            <button type="submit" class="px-5 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 shadow-xs">
+              Guardar Comensal
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ESTADO DE CUENTA / TICKET DE COBRO ================= -->
+  <div id="modal-billing-report" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl border border-slate-200 my-auto flex flex-col max-h-[95vh] animate-slide-up">
+      
+      <!-- Encabezado del Modal -->
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between no-print">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-8"/><path d="M16 12h-8"/><path d="M12 16h-4"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-sm leading-tight">Estado de Cuenta & Reporte de Cobro</h3>
+            <p class="text-[11px] text-slate-500">Ticket detallado listo para enviar por WhatsApp o imprimir</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <!-- Selector Ticket POS o Completo -->
+          <div class="bg-slate-100 p-1 rounded-xl flex text-xs border border-slate-200">
+            <button id="btn-mode-ticket" onclick="setTicketMode('ticket')" class="px-3 py-1 bg-white text-slate-900 rounded-lg text-xs font-bold shadow-xs">
+              Ticket POS (80mm)
+            </button>
+            <button id="btn-mode-full" onclick="setTicketMode('completo')" class="px-3 py-1 text-slate-500 hover:text-slate-900 rounded-lg text-xs font-medium">
+              Carta / Amplio
+            </button>
+          </div>
+          <button onclick="closeModal('modal-billing-report')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold ml-2 leading-none">&times;</button>
+        </div>
+      </div>
+
+      <!-- Contenedor del Comprobante (Área Imprimible) -->
+      <div class="p-4 sm:p-6 overflow-y-auto flex-1 bg-slate-100/60">
+        <div id="billing-report-content">
+          <!-- Render dinámico desde JavaScript del ticket -->
+        </div>
+      </div>
+
+      <!-- Barra de Acciones de Cobro -->
+      <div class="p-4 sm:p-5 border-t border-slate-200 bg-white rounded-b-3xl flex flex-wrap items-center justify-between gap-2.5 no-print">
+        
+        <button id="btn-copy-report" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 transition-colors">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          <span>Copiar Mensaje</span>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button onclick="printBillingReport()" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-colors">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+            <span>Imprimir / PDF</span>
+          </button>
+          
+          <button id="btn-send-whatsapp" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition-colors">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span>Cobrar por WhatsApp</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Contenedor flotante para impresión física / PDF -->
+  <div id="print-area"></div>
+
+  <!-- Contenedor de Alertas Toast Flotantes -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2.5 pointer-events-none max-w-sm"></div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>

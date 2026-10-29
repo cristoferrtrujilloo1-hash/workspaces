@@ -1,0 +1,1 @@
+Made 1 replacement in C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js starting at line 1339 (+175/-28 lines).

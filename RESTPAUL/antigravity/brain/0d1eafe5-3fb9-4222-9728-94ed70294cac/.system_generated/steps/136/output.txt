@@ -1,0 +1,46 @@
+Command exited with code 0.
+
+Command output:
+
+> C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:297:function switchTab(tabName) {
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:298:  appState.currentTab = tabName;
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:299:  
+document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:300:  
+document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:301:    
+btn.classList.remove('bg-slate-900', 'text-white', 'shadow-sm', 'font-bold');
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:302:    
+btn.classList.add('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900', 'font-medium');
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:303:  });
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:304:
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:305:  const activeContent = 
+document.getElementById(`tab-content-${tabName}`);
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:306:  if (activeContent) 
+activeContent.classList.remove('hidden');
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:307:
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:308:  const activeBtn = 
+document.getElementById(`nav-btn-${tabName}`);
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:309:  if (activeBtn) {
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:310:    
+activeBtn.classList.add('bg-slate-900', 'text-white', 'shadow-sm', 'font-bold');
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:311:    
+activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900', 'font-medium');
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:312:  }
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:313:
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:314:  if (tabName === 'clientes') 
+renderClientsList();
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:315:  if (tabName === 'reportes') 
+renderCollectionReport();
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:316:  if (tabName === 'configuracion') 
+loadConfigIntoForm();
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:317:  if (tabName === 'consumos') 
+populateClientSelects();
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:318:  if (tabName === 'abonos') 
+populateClientSelects();
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:319:}
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:320:
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:321:function setClientViewMode(mode) {
+  C:\Users\SISTEMAS\.gemini\antigravity\scratch\control-creditos-comida\app.js:322:  appState.clientViewMode = mode;
+
+

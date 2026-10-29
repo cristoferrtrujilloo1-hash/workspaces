@@ -1,0 +1,4 @@
+Command exited with code 0.
+
+Command output:
+app.js length: 79275
